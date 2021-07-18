@@ -1,4 +1,4 @@
-                                        Ontology Development Task
+                                        Ontology Tool Development Task
 
 Implementation details:
 The tool can be accessed locally at http://localhost:3000/view-ontology 
