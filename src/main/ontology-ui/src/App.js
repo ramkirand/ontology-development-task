@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import OntologyListComponent from "./components/OntologyListComponent";
 import ViewOntologyComponent from "./components/ViewOntologyComponent";
 import HeaderComponent from "./components/HeaderComponent";
-import HomeOntologyComponent from "./components/HomeOntologyComponent";
 function App() {
   return (
     <div>
@@ -12,10 +11,6 @@ function App() {
         <HeaderComponent />
         <div className="container">
           <switch>
-            <Route
-              path="/home-ontology"
-              component={HomeOntologyComponent}
-            ></Route>
             <Route
               path="/view-ontology"
               component={ViewOntologyComponent}

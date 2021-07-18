@@ -32,6 +32,8 @@ class ViewOntologyComponent extends Component {
       })
       .catch((err) => {
         this.state.showMe = false;
+        
+        console.log("err.response:" + err);
         this.setState({
           errResp: JSON.stringify(err.response).substring(10, 129),
         });
