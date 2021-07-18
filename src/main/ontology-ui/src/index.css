@@ -1,0 +1,17 @@
+*{margin: 0; padding: 0; box-sizing:border-box;}
+
+
+.flex {
+  margin: auto;
+  width: 30%;
+  padding: 10px;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing:5 200px;
+  table-layout: fixed;
+}
+
+
+  
