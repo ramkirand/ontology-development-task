@@ -30,10 +30,8 @@ public class Controller {
   @ApiOperation(value = "Get an Onology by ontologyId", response = Ontology.class)
   @GetMapping("ols/api/ontologies/{ontologyId}")
   public Optional<Ontology> getOntologyById(@PathVariable String ontologyId) throws IOException {
-    // throw new ApiRequestException(
-    // errorInfo);
-    try {
-      log.info("Ontology " + ontologyService.getOntologyById(ontologyId));
+   try {
+      log.info("Ontology by Id:" + ontologyService.getOntologyById(ontologyId));
       return ontologyService.getOntologyById(ontologyId);
     } catch (ApiRequestException ex) {
       throw new ApiRequestException(errorInfo + ex.getLocalizedMessage());

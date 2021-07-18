@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import OntologyService from "../services/OntologyService";
-import MainComponent from "../components/MainComponent";
 
 class ViewOntologyComponent extends Component {
   constructor(props) {
@@ -32,6 +31,7 @@ class ViewOntologyComponent extends Component {
         console.log("viewOntology  in then ====>");
       })
       .catch((err) => {
+        this.state.showMe = false;
         this.setState({
           errResp: JSON.stringify(err.response).substring(10, 129),
         });
@@ -58,7 +58,7 @@ class ViewOntologyComponent extends Component {
                 <form className="form-control-lg" onSubmit={this.handleSubmit}>
                   <div className="form-group move-left">
                     <input
-                      placeholder="OntologyId"
+                      placeholder="ontology ID"
                       name="OntologyId"
                       className="form-control"
                       value={this.state.OntologyId}
@@ -83,9 +83,6 @@ class ViewOntologyComponent extends Component {
                 </form>
               </div>
             </div>
-          </div>
-          <div className="flex  text-danger">
-            <p className="m-auto ">{this.state.errResp}</p>
           </div>
         </div>
         <br></br>
@@ -127,7 +124,11 @@ class ViewOntologyComponent extends Component {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div className="flex  text-danger">
+            <p className="m-auto ">{this.state.errResp}</p>
+          </div>
+        )}
       </div>
     );
   }

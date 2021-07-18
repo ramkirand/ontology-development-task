@@ -33,6 +33,7 @@ public class OntologyServiceImpl implements OntologyService {
 
   @Value("${HTTPS_WWW_EBI_AC_UK}")
   private String ebiUrl;
+
   private OlsClient olsClient;
   private OntologyRepository ontologyRepository;
 
@@ -59,8 +60,7 @@ public class OntologyServiceImpl implements OntologyService {
         ontologyRepository.save(ontology.get());
         log.info("<<<<<<<<<<<<<<<<  Ontology Data Saved Successfully  >>>>>>>>>>>>>>>>>>>>>");
       } catch (Exception ex) {
-        throw new ApiRequestException(
-            "failed from ols for getOntologyById" + ex.getLocalizedMessage());
+        throw new ApiRequestException(ex.getLocalizedMessage());
       }
 
     }

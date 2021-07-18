@@ -14,20 +14,16 @@ class OntologyListComponent extends Component {
     OntologyService.getOntologies()
       .then((resp) => {
         if (resp.request.status !== 200) {
-          // console.log("=========== >>>>>>>>>>>>>>>>>>>>" + resp.request.status);
-          throw Error("Hello world");
+          console.log("=========== >>>>>>>>>>>>>>>>>>>>" + resp.request.status);
+          throw Error("getOntologies exception");
         }
         this.setState({ ontologies: resp.data });
       })
       .catch((err) => {
-        // then(res=>{
-        // console.log("===========>" + res);
+        console.log("catch getOntologies exception: " + err.response);
         this.setState({ errResp: err });
       });
-    // setErrors(err.response.data.errors);
-    // this.setState({loading:false,errResp:err.message});
-    //setError(err.message);
-  }
+    }
   render() {
     return (
       <div>
