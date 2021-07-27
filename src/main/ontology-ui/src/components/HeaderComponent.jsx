@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-
+import { Navbar, Container, Header } from "rsuite";
 class HeaderComponent extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand-xl">
-          <div>
-            <span className="navbar-brand mb-0 h1">
-              Ontology Description Tool
-            </span>
-          </div>
-        </nav>
+        <Container>
+          <Header>
+            <Navbar appearance="inverse">
+              <Navbar.Header>
+                <a className="navbar-brand logo">BRAND</a>
+                <a className="navbar-brand logo" href="/login">
+                  Login
+                </a>
+                <a className="navbar-brand logo" href="/register">
+                  Register
+                </a>
+              </Navbar.Header>
+            </Navbar>
+          </Header>
+        </Container>
       </div>
     );
   }

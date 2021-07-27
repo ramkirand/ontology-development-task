@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ontology.exception.ApiRequestException;
 import com.ontology.model.Ontology;
+import com.ontology.model.User;
 import com.ontology.service.OntologyService;
+import com.ontology.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,13 +28,15 @@ public class Controller {
 
   @Autowired
   OntologyService ontologyService;
+  @Autowired
+  UserService userService;
   @Value("${FAILED_TO_GET_ONTOLOGY_INFORMATION_FROM_OLS}")
   private String errorInfo;
 
   @ApiOperation(value = "Get an Onology by ontologyId", response = Ontology.class)
   @GetMapping("ols/api/ontologies/{ontologyId}")
   public Optional<Ontology> getOntologyById(@PathVariable String ontologyId) throws IOException {
-   try {
+    try {
       log.info("Ontology by Id:" + ontologyService.getOntologyById(ontologyId));
       return ontologyService.getOntologyById(ontologyId);
     } catch (ApiRequestException ex) {
@@ -47,6 +53,12 @@ public class Controller {
     } catch (ApiRequestException ex) {
       throw new ApiRequestException(errorInfo + ex.getLocalizedMessage());
     }
+  }
+
+  @ApiOperation(value = "Register user")
+  @PostMapping("ols/api/ontologies/users")
+  public void registeruser(@RequestBody User user) {
+    userService.createUser(user);
   }
 
 }

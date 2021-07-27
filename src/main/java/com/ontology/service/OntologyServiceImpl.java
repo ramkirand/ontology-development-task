@@ -44,7 +44,6 @@ public class OntologyServiceImpl implements OntologyService {
     this.olsClient = olsClient;
   }
 
-
   @Cacheable("OntologyCache")
   @TrackExecutionTime
   public Optional<Ontology> getOntologyById(String ontologyId) throws IOException {
@@ -53,8 +52,7 @@ public class OntologyServiceImpl implements OntologyService {
     if (!ontology.isPresent()) {
 
       try {
-        ResponseEntity<String> ontologyJson =
-            olsClient.retrieveOntologyInformation(ebiUrl + ontologyId);
+        ResponseEntity<String> ontologyJson = fetchOntologyMeta(ontologyId);
         String str = ontologyJson.getBody().split("<200,")[0];
         ontology = buildOntologyMeta(str);
         ontologyRepository.save(ontology.get());
@@ -75,7 +73,7 @@ public class OntologyServiceImpl implements OntologyService {
     ontologies = new ArrayList<Ontology>();
     JsonNode node = null;
     try {
-      ResponseEntity<String> ontologyJson = olsClient.retrieveOntologyInformation(ebiUrl);
+      ResponseEntity<String> ontologyJson = fetchOntologyMeta(null);
       ObjectMapper mapper = new ObjectMapper();
       node = mapper.readTree(ontologyJson.getBody());
       String jsonStr = node.get(_EMBEDDED).get(ONTOLOGIES2).toString();
@@ -101,8 +99,6 @@ public class OntologyServiceImpl implements OntologyService {
     return ontologies;
   }
 
-
-
   private Optional<Ontology> buildOntologyMeta(String ontologyJson) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     JsonNode node = mapper.readTree(ontologyJson);
@@ -111,5 +107,11 @@ public class OntologyServiceImpl implements OntologyService {
         .synonymProperties(node.get(CONFIG).get(SYNONYM_PROPERTIES).toString())
         .title(node.get(CONFIG).get(TITLE).toString())
         .description(node.get(CONFIG).get(DESCRIPTION).toString()).build());
+  }
+
+  private ResponseEntity<String> fetchOntologyMeta(String ontologyId) {
+    ResponseEntity<String> ontologyJson =
+        olsClient.retrieveOntologyInformation(ebiUrl + ontologyId);
+    return ontologyJson;
   }
 }

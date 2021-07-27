@@ -9,6 +9,7 @@ class ViewOntologyComponent extends Component {
       showMe: false,
       ontology: {},
       errResp: "",
+      err: "",
     };
 
     this.changeOntologyIdHandler = this.changeOntologyIdHandler.bind(this);
@@ -25,26 +26,34 @@ class ViewOntologyComponent extends Component {
     console.log("viewOntology ====>" + this.state.ontologyId);
     OntologyService.getOntologyMetaById(this.state.ontologyId)
       .then((res) => {
+        console.log("res >>>>>>>>>>>>>>>>>>>>>:" + res);
         this.state.showMe = true;
         this.setState({ ontology: res.data });
         this.state.errshowMe = true;
         console.log("viewOntology  in then ====>");
       })
       .catch((err) => {
+        if (err.response === null) {
+          this.state.err = err.message;
+          console.log("err.response:" + err.message);
+        }
+
         this.state.showMe = false;
-        
-        console.log("err.response:" + err);
-        this.setState({
-          errResp: JSON.stringify(err.response).substring(10, 129),
-        });
-        //this.state.errshowMe = true;
+        if (err.message !== "Network Error")
+          this.setState({
+            errResp: JSON.stringify(err.response).substring(10, 129),
+          });
+        else {
+          this.setState({
+            errResp: JSON.stringify(err.message),
+          });
+        }
         console.log("viewOntology Clicked" + this.state.errResp);
       });
   };
 
   viewOntologies = (e) => {
     e.preventDefault();
-
     this.props.history.push("/list-ontologies");
     console.log("viewOntologies Clicked");
   };

@@ -13,5 +13,24 @@
   table-layout: fixed;
 }
 
+.navbar{
+  margin-bottom: 80px;
+  
+}
+
+.nav-item{
+  margin-left:195px;
+  
+}
+
+.navbar-toggler-icon{
+  text-decoration:none;
+}
+.btn{
+  margin-left:5px;
+}
+
+
+
 
   
