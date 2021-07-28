@@ -8,15 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ontology.exception.ApiRequestException;
 import com.ontology.model.Ontology;
-import com.ontology.model.User;
 import com.ontology.service.OntologyService;
-import com.ontology.user.UserService;
+import com.ontology.user.OntologyUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,12 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/")
 @CrossOrigin("*")
-public class Controller {
-
+public class OntologyController {
   @Autowired
   OntologyService ontologyService;
   @Autowired
-  UserService userService;
+  OntologyUserService userService;
   @Value("${FAILED_TO_GET_ONTOLOGY_INFORMATION_FROM_OLS}")
   private String errorInfo;
 
@@ -55,10 +51,5 @@ public class Controller {
     }
   }
 
-  @ApiOperation(value = "Register user")
-  @PostMapping("ols/api/ontologies/users")
-  public void registeruser(@RequestBody User user) {
-    userService.createUser(user);
-  }
-
+  
 }
