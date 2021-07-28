@@ -2,21 +2,38 @@ package com.ontology.security.controller.services;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ontology.model.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Data
-@EqualsAndHashCode
+
+
+
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
 
   private String id;
+
+  public String getId() {
+    return id;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
 
   private String username;
 
@@ -74,5 +91,15 @@ public class UserDetailsImpl implements UserDetails {
   public boolean isEnabled() {
     // TODO Auto-generated method stub
     return true;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+      if (this == o)
+          return true;
+      if (o == null || getClass() != o.getClass())
+          return false;
+      UserDetailsImpl user = (UserDetailsImpl) o;
+      return Objects.equals(id, user.id);
   }
 }

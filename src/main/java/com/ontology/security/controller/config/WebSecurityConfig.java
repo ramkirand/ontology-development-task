@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.ontology.jwt.api.filter.AuthTokenFilter;
+import com.ontology.jwt.api.filter.JwtFilter;
 import com.ontology.security.controller.services.AuthEntryPointJwt;
 
 @Configuration
@@ -32,8 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private AuthEntryPointJwt unauthorizedHandler;
 
   @Bean
-  public AuthTokenFilter authenticationJwtTokenFilter() {
-    return new AuthTokenFilter();
+  public JwtFilter authenticationJwtTokenFilter() {
+    return new JwtFilter();
   }
 
   @Override

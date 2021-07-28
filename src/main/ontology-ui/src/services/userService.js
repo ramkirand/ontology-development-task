@@ -1,10 +1,7 @@
-import * as http from 'http';
-import apiUrl from "../config.json";
-const apiEndPoint = apiUrl + "/users";
-export function register(user) {
-  http.post(apiEndPoint, {
-    email: user.username,
-    password: user.password,
-    name: user.name
-  });
+import * as http from "http";
+import {apiUrl} from "../config.json";
+import axios from "axios";
+const apiEndPoint = apiUrl + "users";
+export async function register(email, password,name) {
+  const { data: jwt } = axios.post(apiEndPoint, { email, password,name});
 }
