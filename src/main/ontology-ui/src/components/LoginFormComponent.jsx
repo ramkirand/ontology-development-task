@@ -16,27 +16,25 @@ class LoginFormComponent extends Form {
   };
 
   doSubmit = async () => {
-    
-      const { data } = this.state;
-      console.log("Calling back end");
-      authService.login(data.username, data.password)
+    const { data } = this.state;
+      console.log("data.username: " + data.username + ", data.password:" + data.password)
+      authService
+      .login(data.username, data.password)
       .then((res) => {
         console.log(" From backend res >>>>>>:" + res);
         //await login(data.username, data.password);
-        window.location="/view-ontology";
-      }).catch ((ex)=> {
-     
-     // console.log("<<<<<<<<<<<<LoginFormComponent do submit  In exception  >>>>>>>>>>>>>>>")
-      if (ex.response && ex.response.status === 400) {
-        console.log("In do Submi >>>>>>>>>>>>>>>>>");
-        const errors = { ...this.state.errors };
-        
-        errors.username = ex.response.data;
-        this.setState({ errors });
-      }
-     
-    });
-  }
+        //window.location = "/view-ontology";
+      })
+      .catch((ex) => {
+        if (ex.response && ex.response.status === 400) {
+          console.log("In do Submi >>>>>>>>>>>>>>>>>");
+          const errors = { ...this.state.errors };
+
+          errors.username = ex.response.data;
+          this.setState({ errors });
+        }
+      });
+  };
   render() {
     return (
       <div>

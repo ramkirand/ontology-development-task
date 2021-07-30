@@ -42,6 +42,12 @@ const NavBar = ({ user }) => {
                 List-ontologies
                 </NavLink>
               </li>
+
+              <li class="nav-item">
+                <NavLink clasName="nav-link" to="/logout">
+                Logout
+                </NavLink>
+              </li>
             </React.Fragment>
           )}
           {user && (

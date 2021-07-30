@@ -1,19 +1,13 @@
 import * as http from "http";
-import apiUrl from "../config.json";
+import {apiUrl} from "../config.json";
+import {authUrl} from "../config.json";
 import jwtDecode from "jwt-decode";
-import axios from 'axios';
+import axios from "axios";
 
-//const apiEndPoint = JSON.stringify(apiUrl) + "/users";
-const apiEndPoint = "http://localhost:8080/ols/api/ontologies/" + "users";
+const apiEndPoint = authUrl + "/authenticate";
 const tokenKey = "token";
-
-export async function login(email, password) {
-  console.log("<<<<<<<<<<< auth service login  >>>>>");
-  //const { data: jwt } = await http.post(apiEndPoint, { email, password });
-
-  const { data: jwt } = axios.post(apiEndPoint, { email, password });
-
-  console.log("<<<<<<<<<<< auth service   >>>>>  " + jwt);
+export async function login(username, password) {
+  const { data: jwt } = axios.post(apiEndPoint, { username, password });
   localStorage.setItem(tokenKey, jwt);
 }
 

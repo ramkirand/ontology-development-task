@@ -1,3 +1,4 @@
 {
-    "apiUrl":"http://localhost:8080/ols/api/ontologies/"
+    "apiUrl":"http://localhost:8080/ols/api/ontologies/",
+    "authUrl":"http://localhost:8080/api/auth"
 }

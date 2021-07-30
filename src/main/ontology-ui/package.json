@@ -13,6 +13,7 @@
     "css-loader": "^6.0.0",
     "formik": "^2.2.9",
     "joi-browser": "^13.4.0",
+    "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "mdbreact": "^5.1.0",
     "react": "^17.0.2",
