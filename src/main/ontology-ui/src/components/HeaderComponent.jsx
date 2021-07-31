@@ -18,8 +18,9 @@ class HeaderComponent extends Component {
               </Navbar.Header>
             </Navbar>
           </Header>
+         
         </Container>
-      </div>
+  </div>
     );
   }
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.ontology.exception.ApiRequestException;
 import com.ontology.model.ERole;
 import com.ontology.model.Role;
 import com.ontology.model.User;
 import com.ontology.repository.RoleRepository;
 import com.ontology.repository.UserRepository;
-import com.ontology.security.controller.model.LoginRequest;
-import com.ontology.security.controller.model.MessageResponse;
-import com.ontology.security.controller.model.SignupRequest;
+import com.ontology.security.model.JwtResponse;
+import com.ontology.security.model.LoginRequest;
+import com.ontology.security.model.MessageResponse;
+import com.ontology.security.model.SignupRequest;
 import com.ontology.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/auth")
 @CrossOrigin("*")
 public class AuthenticationController {
+
+
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -46,6 +51,9 @@ public class AuthenticationController {
   JwtUtils jwtUtils;
   @Autowired
   private JwtUtils jwtUtil;
+
+  @Value("${INVALID_USER}")
+  private String invalidUser;
 
   @GetMapping("/")
   public String welcome() {
@@ -106,17 +114,22 @@ public class AuthenticationController {
   }
 
   @PostMapping("/authenticate")
-  public String generateToken(@RequestBody LoginRequest authRequest) throws Exception {
+  public ResponseEntity<JwtResponse> generateToken(@Valid @RequestBody LoginRequest authRequest)
+      throws Exception {
+    JwtResponse jwtResponse = new JwtResponse();
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authRequest.getUsername(), authRequest.getPassword()));
-    } catch (Exception e) {
-      throw new Exception("Invalid User");
-    }
+      String token = jwtUtil.generateToken(authRequest.getUsername());
+      jwtResponse.setToken(token);
+      jwtResponse.setEmail(authRequest.getUsername());
 
-    String token = jwtUtil.generateToken(authRequest.getUsername());
-    log.info("JWT token:" + token);
-    return token;
+    } catch (Exception ex) {
+      jwtResponse.setUsername(authRequest.getUsername());
+      throw new ApiRequestException(invalidUser + ex.getLocalizedMessage());
+    }
+    log.info("JWT :" + jwtResponse);
+    return ResponseEntity.ok(jwtResponse);
   }
 
 }

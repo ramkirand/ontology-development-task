@@ -1,4 +1,4 @@
-package com.ontology.security.controller.services;
+package com.ontology.security.services;
 
 import java.util.Collection;
 import java.util.List;

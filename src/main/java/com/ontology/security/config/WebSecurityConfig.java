@@ -1,4 +1,4 @@
-package com.ontology.security.controller.config;
+package com.ontology.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.ontology.jwt.api.filter.JwtFilter;
-import com.ontology.security.controller.services.AuthEntryPointJwt;
+import com.ontology.security.services.AuthEntryPointJwt;
 
 @Configuration
 @EnableWebSecurity

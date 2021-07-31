@@ -1,4 +1,4 @@
-package com.ontology.security.controller.model;
+package com.ontology.security.model;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

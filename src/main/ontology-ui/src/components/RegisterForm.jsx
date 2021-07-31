@@ -27,9 +27,9 @@ class RegisterForm extends Form {
         data.name
     );
     const resp = userService
-      .register(data.username, data.password, data.name)
+      .register(this.state.data)
       .then((res) => {
-        console.log(" From backend res >>>>>>:" + JSON.stringify(resp));
+        console.log(" From backend res >>>>>>:" + JSON.stringify(res));
         //await login(data.username, data.password);
         //window.location = "/";
       })

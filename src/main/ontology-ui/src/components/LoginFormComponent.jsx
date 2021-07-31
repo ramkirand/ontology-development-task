@@ -4,10 +4,13 @@ import Form from "./common/Form";
 import Input from "./common/Input";
 import { login } from "../services/authService";
 import authService from "../services/authService";
+import flower from "../image/ontology.jpg";
 class LoginFormComponent extends Form {
   state = {
     data: { username: "", password: "" },
+    response: "",
     errors: {},
+    showMe: false,
   };
 
   schema = {
@@ -15,24 +18,23 @@ class LoginFormComponent extends Form {
     password: Joi.string().required().min(5),
   };
 
-  doSubmit = async () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const tokenKey = "token";
     const { data } = this.state;
-      console.log("data.username: " + data.username + ", data.password:" + data.password)
       authService
-      .login(data.username, data.password)
+      .login(this.state.data)
       .then((res) => {
-        console.log(" From backend res >>>>>>:" + res);
-        //await login(data.username, data.password);
-        //window.location = "/view-ontology";
+        console.log("Jwt:" + JSON.stringify(res.data.token));
+        localStorage.setItem(tokenKey, JSON.stringify(res.data.token));
+        window.location = "/view-ontology";
       })
-      .catch((ex) => {
-        if (ex.response && ex.response.status === 400) {
-          console.log("In do Submi >>>>>>>>>>>>>>>>>");
-          const errors = { ...this.state.errors };
+      .catch((err) => {
+        this.state.showMe = true;
 
-          errors.username = ex.response.data;
-          this.setState({ errors });
-        }
+        this.setState({
+          response: "Invalid username/password",
+        });
       });
   };
   render() {
@@ -41,9 +43,18 @@ class LoginFormComponent extends Form {
         <div className="col-md-4  offset-md-2">
           <h2>Login</h2>
           <form className="form-control-md" onSubmit={this.handleSubmit}>
-            {this.renderInput("username", "Email")}
+            {this.renderInput("username", "Email", "username")}
             {this.renderInput("password", "Password", "password")}
             {this.renderButton("Login")}
+            {this.state.showMe ? (
+              <div className="flex  text-danger">
+                <p className="m-auto ">{this.state.response}</p>
+              </div>
+            ) : (
+              <div className="flex  text-primary">
+                <p className="m-auto ">{this.state.response}</p>
+              </div>
+            )}
           </form>
         </div>
       </div>

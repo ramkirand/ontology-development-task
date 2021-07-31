@@ -22,6 +22,7 @@ class App extends Component {
       <Router>
       <React.Fragment>
         <Navbar/>
+        
         {/* <HeaderComponent /> */}  
           {/* <ToastContainer /> */}
          {/* <NavbarPage user={this.state.user}/> */}

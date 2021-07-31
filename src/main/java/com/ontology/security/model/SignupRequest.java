@@ -1,4 +1,4 @@
-package com.ontology.security.controller.model;
+package com.ontology.security.model;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -14,19 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-//@Document(collection = "USER")
+@Document(collection = "USER")
 public class SignupRequest implements Serializable {
   private static final long serialVersionUID = 1L;
-  @JsonProperty("Email")
+//  @JsonProperty("Email")
   private String username;
   // @Size(min = 3, max = 20)
-  @JsonProperty("Password")
+//  @JsonProperty("Password")
   private String password;
- 
-  @JsonProperty("Name")
+
+//  @JsonProperty("Name")
   private String name;
   // @Size(min = 6, max = 40)
- 
-  @JsonProperty("roles")
+
+//  @JsonProperty("roles")
   private Set<String> roles;
 }
