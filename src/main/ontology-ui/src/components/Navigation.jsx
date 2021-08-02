@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-const Navigation = ({ user }) => {
+const Navigation = ({ currentUser }) => {
   return (
     <nav className="navbar navbar-expand-md navbar-light bg-info">
       <Link className="navbar-brand" to="/">
@@ -19,7 +19,7 @@ const Navigation = ({ user }) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
-          {!user && (
+          {!currentUser && (
             <React.Fragment>
               <li class="nav-item">
                 <NavLink clasName="nav-link" to="/login">
@@ -31,7 +31,16 @@ const Navigation = ({ user }) => {
                   Register
                 </NavLink>
               </li>
+            </React.Fragment>
+          )}
+          {currentUser && (
+            <React.Fragment>
               <li class="nav-item">
+                <NavLink clasName="nav-link" to="/view-ontology">
+                  {currentUser.split(":")[1].substring(1,17)}
+                </NavLink>
+              </li>
+              {/* <li class="nav-item">
                 <NavLink clasName="nav-link" to="/view-ontology">
                   Ontology-details
                 </NavLink>
@@ -41,21 +50,14 @@ const Navigation = ({ user }) => {
                 <NavLink clasName="nav-link" to="/list-ontologies">
                   List-ontologies
                 </NavLink>
-              </li>
+              </li> */}
 
               <li class="nav-item">
                 <NavLink clasName="nav-link" to="/logout">
                   Logout
                 </NavLink>
               </li>
-            </React.Fragment>
-          )}
-          {user && (
-            <React.Fragment>
-              <NavLink clasName="nav-item nav-link" to="/logout">
-                LogOut
-              </NavLink>
-            </React.Fragment>
+             </React.Fragment>
           )}
         </div>
       </div>

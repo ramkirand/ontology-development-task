@@ -1,7 +1,7 @@
 import * as http from "http";
 import { apiUrl } from "../config.json";
 import { authUrl } from "../config.json";
-import jwtDecode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 const apiEndPoint = authUrl + "/authenticate";
@@ -11,8 +11,7 @@ export async function login(user) {
     username: user.username,
     password: user.password,
   });
-  localStorage.setItem(tokenKey, jwt);
-  console.log("<<<<<<<<<<  User:" + JSON.stringify(jwt));
+  localStorage.setItem(tokenKey, JSON.stringify(jwt.token));
 }
 export function loginWithJwt(jwt) {
   localStorage.setItem(tokenKey, jwt);

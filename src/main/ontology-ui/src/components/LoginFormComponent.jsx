@@ -22,12 +22,11 @@ class LoginFormComponent extends Form {
     auth
       .login(this.state.data)
       .then((res) => {
-        console.log(JSON.stringify(res));
         window.location = "/view-ontology";
         console.log("In then");
       })
       .catch((err) => {
-        console.log("IN catch");
+        console.log("In catch");
         this.state.showMe = true;
         this.state.response = "Invalid username/password";
         window.location = "/";

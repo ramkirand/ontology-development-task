@@ -10,7 +10,7 @@ export async function register(user) {
     password: user.password,
     name: user.name,
   });
-  console.log("<<<<<<<<<<  function register:" + JSON.stringify(jwt));
+  console.log("<<<<<<<<<<  User:" + JSON.stringify(jwt));
 }
 
 export default {
