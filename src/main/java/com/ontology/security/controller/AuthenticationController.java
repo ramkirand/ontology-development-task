@@ -35,6 +35,14 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationController {
 
 
+  private static final String USER_REGISTERED_SUCCESSFULLY = "User registered successfully!";
+
+  private static final String ERROR_USERNAME_IS_ALREADY_TAKEN = "Error: Username is already taken!";
+
+  private static final String ERROR_NAME_IS_ALREADY_IN_USE = "Error: name is already in use!";
+
+  private static final String ERROR_ROLE_IS_NOT_FOUND = "Error: Role is not found.";
+  
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -62,15 +70,16 @@ public class AuthenticationController {
 
 
   @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+      
       return ResponseEntity.badRequest()
-          .body(new MessageResponse("Error: Username is already taken!"));
+          .body(new MessageResponse(ERROR_USERNAME_IS_ALREADY_TAKEN));
     }
 
     if (userRepository.existsByName(signUpRequest.getName())) {
       return ResponseEntity.badRequest()
-          .body(new MessageResponse("Error: name is already in use!"));
+          .body(new MessageResponse(ERROR_NAME_IS_ALREADY_IN_USE));
     }
 
     // Create new user's account
@@ -82,26 +91,26 @@ public class AuthenticationController {
 
     if (strRoles == null) {
       Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
       roles.add(userRole);
     } else {
       strRoles.forEach(role -> {
         switch (role) {
           case "admin":
             Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
             roles.add(adminRole);
 
             break;
           case "mod":
             Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
             roles.add(modRole);
 
             break;
           default:
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
             roles.add(userRole);
         }
       });
@@ -110,26 +119,36 @@ public class AuthenticationController {
     user.setRoles(roles);
     userRepository.save(user);
 
-    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    return ResponseEntity.ok(new MessageResponse(USER_REGISTERED_SUCCESSFULLY));
   }
 
   @PostMapping("/authenticate")
   public ResponseEntity<JwtResponse> generateToken(@Valid @RequestBody LoginRequest authRequest)
       throws Exception {
     JwtResponse jwtResponse = new JwtResponse();
+    String token = null,loggedInUserName = null;
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authRequest.getUsername(), authRequest.getPassword()));
-      String token = jwtUtil.generateToken(authRequest.getUsername());
-      jwtResponse.setToken(token);
-      jwtResponse.setEmail(authRequest.getUsername());
-
+      token = jwtUtil.generateToken(authRequest.getUsername());
+      loggedInUserName = userRepository.findByUsername(authRequest.getUsername()).get().getName();
+      log.info("<<<<<<<<<<<< JWT token:" + token);
+      buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
     } catch (Exception ex) {
-      jwtResponse.setUsername(authRequest.getUsername());
+      buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
       throw new ApiRequestException(invalidUser + ex.getLocalizedMessage());
     }
     log.info("JWT :" + jwtResponse);
     return ResponseEntity.ok(jwtResponse);
+  }
+
+
+  private void buildLoginFormResponse(LoginRequest authRequest, JwtResponse jwtResponse,
+      String token, String name) {
+    jwtResponse.setToken(token);
+    jwtResponse.setName(name);
+    jwtResponse.setEmail(authRequest.getUsername());
+    jwtResponse.setUsername(authRequest.getUsername());
   }
 
 }

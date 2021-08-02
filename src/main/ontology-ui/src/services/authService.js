@@ -5,11 +5,14 @@ import jwtDecode from "jwt-decode";
 import axios from "axios";
 
 const apiEndPoint = authUrl + "/authenticate";
+const tokenKey = "token";
 export async function login(user) {
-  return axios.post(apiEndPoint, {
+  const { data: jwt } = await axios.post(apiEndPoint, {
     username: user.username,
     password: user.password,
   });
+  localStorage.setItem(tokenKey, jwt);
+  console.log("<<<<<<<<<<  User:" + JSON.stringify(jwt));
 }
 export function loginWithJwt(jwt) {
   localStorage.setItem(tokenKey, jwt);
@@ -21,11 +24,10 @@ export function logout() {
 }
 
 export function getCurrentUser() {
-  //TBD revisit later
   try {
     const jwt = localStorage.getItem(tokenKey);
-    return jwtDecode(jwt);
-    // console.log(user);
+    console.log("JWT decode:" + JSON.stringify(jwt));
+    return jwt;
   } catch (ex) {
     return null;
   }

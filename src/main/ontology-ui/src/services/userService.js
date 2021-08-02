@@ -5,11 +5,12 @@ import axios from "axios";
 const apiEndPoint = authUrl + "/signup";
 
 export async function register(user) {
-  const { data: jwt } = axios.post(apiEndPoint, {
+  const { data: jwt } = await axios.post(apiEndPoint, {
     username: user.username,
     password: user.password,
     name: user.name,
   });
+  console.log("<<<<<<<<<<  function register:" + JSON.stringify(jwt));
 }
 
 export default {

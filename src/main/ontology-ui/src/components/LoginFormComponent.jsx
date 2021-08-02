@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Form from "./common/Form";
-import Input from "./common/Input";
-import { login } from "../services/authService";
-import authService from "../services/authService";
-import flower from "../image/ontology.jpg";
+import auth from "../services/authService";
+
 class LoginFormComponent extends Form {
   state = {
     data: { username: "", password: "" },
@@ -20,21 +18,19 @@ class LoginFormComponent extends Form {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const tokenKey = "token";
     const { data } = this.state;
-      authService
+    auth
       .login(this.state.data)
       .then((res) => {
-        console.log("Jwt:" + JSON.stringify(res.data.token));
-        localStorage.setItem(tokenKey, JSON.stringify(res.data.token));
+        console.log(JSON.stringify(res));
         window.location = "/view-ontology";
+        console.log("In then");
       })
       .catch((err) => {
+        console.log("IN catch");
         this.state.showMe = true;
-
-        this.setState({
-          response: "Invalid username/password",
-        });
+        this.state.response = "Invalid username/password";
+        window.location = "/";
       });
   };
   render() {
