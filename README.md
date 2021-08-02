@@ -1,3 +1,5 @@
+				Full Stack Project
+	
 	# Technologies used: Java 8,Spring Boot, Mongo DB, React,JWT for authentication & authorization
 
 	Ontology Development Task
