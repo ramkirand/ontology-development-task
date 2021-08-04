@@ -19,7 +19,7 @@ import lombok.ToString;
 @ApiModel(value = "User details")
 @Data
 @Document(collection = "USERS")
-public class User implements Serializable {
+public class AppUser implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -32,12 +32,12 @@ public class User implements Serializable {
 
   @JsonProperty("Password")
   private String password;
-  
+
   @NotBlank
   @Size(max = 20)
   @JsonProperty("Name")
   private String name;
-  
+
   @NotBlank
   @Size(max = 50)
   @JsonProperty("Email")
@@ -46,24 +46,13 @@ public class User implements Serializable {
   @DBRef
   private Set<Role> roles = new HashSet<>();
 
-  public User() {}
+  public AppUser() {}
 
-  public User(@NotBlank @Size(max = 20) String username, String name,
+  public AppUser(@NotBlank @Size(max = 20) String username, String name,
       @NotBlank @Size(max = 20) String password) {
-    
+
     this.username = username;
     this.password = password;
     this.name = name;
   }
-
-  
-
-//  public User(@NotBlank @Size(max = 20) String name, @NotBlank @Size(max = 50) @Email String email,
-//      @NotBlank @Size(max = 20) String username, String password) {
-//    this.name = name;
-//    this.email = email;
-//    this.username = username;
-//    this.password = password;
-//  }
-
 }

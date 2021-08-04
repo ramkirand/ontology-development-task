@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ontology.exception.ApiRequestException;
-import com.ontology.model.User;
+import com.ontology.model.AppUser;
 import com.ontology.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +21,9 @@ public class OntolgyUserServiceImpl implements OntologyUserService {
   }
 
   @Override
-  public Optional<User> createUser(User user) {
+  public Optional<AppUser> createUser(AppUser user) {
     String currentUser = user.getUsername();
-    List<User> users = userRepository.findAll();
+    List<AppUser> users = userRepository.findAll();
     users.forEach(l -> {
       if (l.getUsername().equals(currentUser)) {
         throw new ApiRequestException(USER_ALREADY_EXISTS);

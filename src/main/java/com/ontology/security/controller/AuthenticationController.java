@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ontology.exception.ApiRequestException;
+import com.ontology.model.AppUser;
 import com.ontology.model.ERole;
 import com.ontology.model.Role;
-import com.ontology.model.User;
-import com.ontology.repository.RoleRepository;
 import com.ontology.repository.UserRepository;
 import com.ontology.security.model.JwtResponse;
 import com.ontology.security.model.LoginRequest;
 import com.ontology.security.model.MessageResponse;
 import com.ontology.security.model.SignupRequest;
-import com.ontology.util.JwtUtils;
+import com.ontology.security.repository.RoleRepository;
+import com.ontology.security.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -42,7 +42,7 @@ public class AuthenticationController {
   private static final String ERROR_NAME_IS_ALREADY_IN_USE = "Error: name is already in use!";
 
   private static final String ERROR_ROLE_IS_NOT_FOUND = "Error: Role is not found.";
-  
+
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -70,20 +70,19 @@ public class AuthenticationController {
 
 
   @PostMapping("/signup")
-  public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<MessageResponse> registerUser(
+      @Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      
-      return ResponseEntity.badRequest()
-          .body(new MessageResponse(ERROR_USERNAME_IS_ALREADY_TAKEN));
+
+      return ResponseEntity.badRequest().body(new MessageResponse(ERROR_USERNAME_IS_ALREADY_TAKEN));
     }
 
     if (userRepository.existsByName(signUpRequest.getName())) {
-      return ResponseEntity.badRequest()
-          .body(new MessageResponse(ERROR_NAME_IS_ALREADY_IN_USE));
+      return ResponseEntity.badRequest().body(new MessageResponse(ERROR_NAME_IS_ALREADY_IN_USE));
     }
 
     // Create new user's account
-    User user = new User(signUpRequest.getUsername(), signUpRequest.getName(),
+    AppUser user = new AppUser(signUpRequest.getUsername(), signUpRequest.getName(),
         encoder.encode(signUpRequest.getPassword()));
 
     Set<String> strRoles = signUpRequest.getRoles();
@@ -126,13 +125,13 @@ public class AuthenticationController {
   public ResponseEntity<JwtResponse> generateToken(@Valid @RequestBody LoginRequest authRequest)
       throws Exception {
     JwtResponse jwtResponse = new JwtResponse();
-    String token = null,loggedInUserName = null;
+    String token = null, loggedInUserName = null;
     try {
+      loggedInUserName = userRepository.findByUsername(authRequest.getUsername()).get().getName();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authRequest.getUsername(), authRequest.getPassword()));
-      token = jwtUtil.generateToken(authRequest.getUsername());
+      token = jwtUtil.generateToken(authRequest.getUsername(), loggedInUserName);
       loggedInUserName = userRepository.findByUsername(authRequest.getUsername()).get().getName();
-      log.info("<<<<<<<<<<<< JWT token:" + token);
       buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
     } catch (Exception ex) {
       buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
@@ -147,7 +146,7 @@ public class AuthenticationController {
       String token, String name) {
     jwtResponse.setToken(token);
     jwtResponse.setName(name);
-    jwtResponse.setEmail(authRequest.getUsername());
+    jwtResponse.setEmail(authRequest.getEmail());
     jwtResponse.setUsername(authRequest.getUsername());
   }
 

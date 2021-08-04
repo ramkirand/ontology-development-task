@@ -1,4 +1,4 @@
-package com.ontology.util;
+package com.ontology.security.util;
 
 
 import java.util.Date;
@@ -38,14 +38,14 @@ public class JwtUtils {
     return extractExpiration(token).before(new Date());
   }
 
-  public String generateToken(String userName) {
+  public String generateToken(String userName,String email) {
     Map<String, Object> claims = new HashMap<>();
-    return createToken(claims, userName);
+    return createToken(claims, userName,email);
   }
 
-  private String createToken(Map<String, Object> claims, String subject) {
+  private String createToken(Map<String, Object> claims, String subject,String email) {
 
-    return Jwts.builder().setClaims(claims).setSubject(subject)
+    return Jwts.builder().setClaims(claims).setSubject(email)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
         .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();

@@ -25,7 +25,7 @@ class App extends Component {
     return (
       <Router>
         <React.Fragment>
-          <Navigation currentUser={this.state.currentUser} />
+          <Navigation currentUser = {this.state.currentUser} />
           <main className="container">
             <switch>
               <Route path="/register" component={RegisterForm}></Route>
