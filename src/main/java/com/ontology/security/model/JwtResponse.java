@@ -17,17 +17,18 @@ public class JwtResponse implements Serializable{
   private String username;
   private String email;
   private String name;
-  private List<String> roles;
+  //private List<String> roles;
+  private String role;
 
 
 
   public JwtResponse(String accessToken, String id, String username, String email,
-      List<String> roles) {
+      String role) {
     this.token = accessToken;
     this.id = id;
     this.username = username;
     this.email = email;
-    this.roles = roles;
+    this.role = role;
   }
 
 

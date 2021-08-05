@@ -9,6 +9,7 @@ export async function register(user) {
     username: user.username,
     password: user.password,
     name: user.name,
+    role:user.role,
   });
   console.log("<<<<<<<<<<  User:" + JSON.stringify(jwt));
 }

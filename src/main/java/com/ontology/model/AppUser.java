@@ -43,16 +43,20 @@ public class AppUser implements Serializable {
   @JsonProperty("Email")
   private String email;
 
-  @DBRef
-  private Set<Role> roles = new HashSet<>();
+  // @DBRef
+  // private Set<Role> roles = new HashSet<>();
+ 
+ // @JsonProperty("Role")
+  private String role; 
 
   public AppUser() {}
 
   public AppUser(@NotBlank @Size(max = 20) String username, String name,
-      @NotBlank @Size(max = 20) String password) {
+      @NotBlank @Size(max = 20) String password, String role) {
 
     this.username = username;
     this.password = password;
     this.name = name;
+    this.role = role;
   }
 }

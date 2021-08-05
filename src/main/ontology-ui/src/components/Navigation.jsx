@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 const Navigation = ({ currentUser }) => {
- 
   return (
     <nav className="navbar navbar-expand-md navbar-light bg-info">
       <Link className="navbar-brand" to="/">
@@ -38,27 +37,18 @@ const Navigation = ({ currentUser }) => {
             <React.Fragment>
               <li class="nav-item">
                 <NavLink clasName="nav-link" to="/view-ontology">
-                  {currentUser.split(":")[1].split(",")[0].replace(/^"(.*)"$/, '$1')}
+                  {currentUser
+                    .split(":")[1]
+                    .split(",")[0]
+                    .replace(/^"(.*)"$/, "$1")}
                 </NavLink>
               </li>
-              {/* <li class="nav-item">
-                <NavLink clasName="nav-link" to="/view-ontology">
-                  Ontology-details
-                </NavLink>
-              </li>
-
-              <li class="nav-item">
-                <NavLink clasName="nav-link" to="/list-ontologies">
-                  List-ontologies
-                </NavLink>
-              </li> */}
-
               <li class="nav-item">
                 <NavLink clasName="nav-link" to="/logout">
                   Logout
                 </NavLink>
               </li>
-             </React.Fragment>
+            </React.Fragment>
           )}
         </div>
       </div>

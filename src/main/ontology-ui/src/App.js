@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import OntologyListComponent from "./components/OntologyListComponent";
 import ViewOntologyComponent from "./components/ViewOntologyComponent";
 import LoginFormComponent from "./components/LoginFormComponent";
+import ProfileComponent from "./components/ProfileComponent";
 import Logout from "./components/Logout";
 import RegisterForm from "./components/RegisterForm";
 import Navigation from "./components/Navigation";
@@ -21,7 +22,7 @@ class App extends Component {
     } catch (ex) {}
   }
   render() {
-    //const { currentUser } = this.state;
+    const { currentUser } = this.state;
     return (
       <Router>
         <React.Fragment>
@@ -33,6 +34,7 @@ class App extends Component {
               <Route path="/logout" component={Logout}></Route>
               <Route path="/navigation" component={Navigation}></Route>
               <Route path="/view-ontology" component={ViewOntologyComponent} />
+              <Route path="/user-profile" component={ProfileComponent} />
               <Route
                 path="/list-ontologies"
                 component={OntologyListComponent}

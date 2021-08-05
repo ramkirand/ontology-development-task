@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Document(collection = "USER")
-public class SignupRequest implements Serializable {
-  private static final long serialVersionUID = 1L;
+@Document(collection = "USERS")
+public class SignupRequest{
+ 
 //  @JsonProperty("Email")
   private String username;
   // @Size(min = 3, max = 20)
@@ -28,5 +28,5 @@ public class SignupRequest implements Serializable {
   // @Size(min = 6, max = 40)
 
 //  @JsonProperty("roles")
-  private Set<String> roles;
+  private String role;
 }

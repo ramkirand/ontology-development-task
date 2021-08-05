@@ -5,7 +5,7 @@ import * as userService from "../services/userService";
 import auth from "../services/authService";
 class RegisterForm extends Form {
   state = {
-    data: { username: "", password: "", name: "" },
+    data: { username: "", password: "", name: "",role:"" },
     errors: {},
     showMe: false,
     response: "",
@@ -15,6 +15,7 @@ class RegisterForm extends Form {
     username: Joi.string().required().email(),
     password: Joi.string().required(),
     name: Joi.string().required(),
+    role:Joi.required(),
   };
   doSubmit = (e) => {
     e.preventDefault();
@@ -33,7 +34,7 @@ class RegisterForm extends Form {
           this.state.response = JSON.stringify(err.message);
         }
         console.log("register Clicked:" + this.state.response);
-        alert(this.state.response);
+       // alert(this.state.response);
         window.location = "/";
       });
   };
@@ -46,6 +47,7 @@ class RegisterForm extends Form {
             {this.renderInput("username", "Email", "username")}
             {this.renderInput("password", "Password", "password")}
             {this.renderInput("name", "Name", "name")}
+            {this.renderInput("role", "Role", "role")}
             {this.renderButton("Register")}
             {this.state.showMe ? (
               <div className="flex  text-danger">

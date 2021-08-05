@@ -1,6 +1,7 @@
 package com.ontology.security.controller;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,39 +84,36 @@ public class AuthenticationController {
 
     // Create new user's account
     AppUser user = new AppUser(signUpRequest.getUsername(), signUpRequest.getName(),
-        encoder.encode(signUpRequest.getPassword()));
+        encoder.encode(signUpRequest.getPassword()), signUpRequest.getRole());
 
-    Set<String> strRoles = signUpRequest.getRoles();
-    Set<Role> roles = new HashSet<>();
+    String strRole = signUpRequest.getRole();
+    // Set<Role> roles = new HashSet<>();
 
-    if (strRoles == null) {
-      Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-          .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-      roles.add(userRole);
+    if (strRole == null) {
+      // Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+      // .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+      // roles.add(userRole);
     } else {
-      strRoles.forEach(role -> {
-        switch (role) {
-          case "admin":
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-            roles.add(adminRole);
+      switch (strRole) {
+        case "admin":
+          Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+          user.setRole(adminRole.getId());
+          break;
+        case "mod":
+          Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+          user.setRole(modRole.getId());
+          break;
+        default:
+          Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+          user.setRole(userRole.getId());
+      }
 
-            break;
-          case "mod":
-            Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-            roles.add(modRole);
-
-            break;
-          default:
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-            roles.add(userRole);
-        }
-      });
     }
 
-    user.setRoles(roles);
+    // user.setRoles(roles);
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse(USER_REGISTERED_SUCCESSFULLY));
@@ -125,16 +123,14 @@ public class AuthenticationController {
   public ResponseEntity<JwtResponse> generateToken(@Valid @RequestBody LoginRequest authRequest)
       throws Exception {
     JwtResponse jwtResponse = new JwtResponse();
-    String token = null, loggedInUserName = null;
     try {
-      loggedInUserName = userRepository.findByUsername(authRequest.getUsername()).get().getName();
+      AppUser user = userRepository.findByUsername(authRequest.getUsername()).get();
+
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authRequest.getUsername(), authRequest.getPassword()));
-      token = jwtUtil.generateToken(authRequest.getUsername(), loggedInUserName);
-      loggedInUserName = userRepository.findByUsername(authRequest.getUsername()).get().getName();
-      buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
+      String token = jwtUtil.generateToken(authRequest.getUsername(), user.getName());
+      buildLoginFormResponse(jwtResponse, user, token);
     } catch (Exception ex) {
-      buildLoginFormResponse(authRequest, jwtResponse, token, loggedInUserName);
       throw new ApiRequestException(invalidUser + ex.getLocalizedMessage());
     }
     log.info("JWT :" + jwtResponse);
@@ -142,12 +138,16 @@ public class AuthenticationController {
   }
 
 
-  private void buildLoginFormResponse(LoginRequest authRequest, JwtResponse jwtResponse,
-      String token, String name) {
-    jwtResponse.setToken(token);
-    jwtResponse.setName(name);
-    jwtResponse.setEmail(authRequest.getEmail());
-    jwtResponse.setUsername(authRequest.getUsername());
+  private void buildLoginFormResponse(JwtResponse jwtResponse, AppUser user, String token) {
+    if (user != null && token != null) {
+      Optional<Role> role = roleRepository.findById(user.getRole());
+      jwtResponse.setToken(token);
+      jwtResponse.setName(user.getName());
+      jwtResponse.setEmail(user.getUsername());
+      jwtResponse.setUsername(user.getUsername());
+      jwtResponse.setRole(role.get().getName());
+    }
+
   }
 
 }

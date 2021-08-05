@@ -12,10 +12,11 @@ public class Role {
   @Id
   private String id;
 
-  private ERole name;
+//  private ERole name;
+  private String name;
 
-  public Role(ERole name) {
-    this.name = name;
-  }
+//  public Role(ERole name) {
+//    this.name = name;
+//  }
 
 }
