@@ -29,6 +29,17 @@
 	Currently the CORS is set to “ * ” for everyone instead of specified users.
 	Security for the API’ is not implemented.
 	The code cannot handle different mongo dB configuration i.e master and slave.
+	
+	Run Spring Boot application
+
+	We also need to add some rows into roles collection before assigning any role to User.
+	Run following MongoDB insert statements:
+
+	db.roles.insertMany([
+   	{ name: "ROLE_USER" },
+   	{ name: "ROLE_MODERATOR" },
+   	{ name: "ROLE_ADMIN" },
+	])
 
  
 
