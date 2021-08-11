@@ -1,8 +1,6 @@
 package com.ontology.security.controller;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,35 +85,24 @@ public class AuthenticationController {
         encoder.encode(signUpRequest.getPassword()), signUpRequest.getRole());
 
     String strRole = signUpRequest.getRole();
-    // Set<Role> roles = new HashSet<>();
-
-    if (strRole == null) {
-      // Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-      // .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-      // roles.add(userRole);
-    } else {
-      switch (strRole) {
-        case "admin":
-          Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-          user.setRole(adminRole.getId());
-          break;
-        case "mod":
-          Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-          user.setRole(modRole.getId());
-          break;
-        default:
-          Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-              .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-          user.setRole(userRole.getId());
-      }
-
+    switch (strRole) {
+      case "admin":
+        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+            .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+        user.setRole(adminRole.getId());
+        break;
+      case "mod":
+        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+            .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+        user.setRole(modRole.getId());
+        break;
+      default:
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+            .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+        user.setRole(userRole.getId());
     }
 
-    // user.setRoles(roles);
     userRepository.save(user);
-
     return ResponseEntity.ok(new MessageResponse(USER_REGISTERED_SUCCESSFULLY));
   }
 

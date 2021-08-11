@@ -48,6 +48,12 @@ const Navigation = ({ currentUser }) => {
                   Logout
                 </NavLink>
               </li>
+
+              <li class="nav-item">
+                <NavLink exact to ='/' clasName="nav-link" to="/user-profile">
+                  Profile
+                </NavLink>
+              </li>
             </React.Fragment>
           )}
         </div>

@@ -17,7 +17,6 @@ class App extends Component {
     try {
       const jwt = localStorage.getItem("token");
       const currentUser = JSON.stringify(jwt_decode(jwt));
-      console.log(">>>>>> currentUser:" + currentUser);
       this.setState({ currentUser });
     } catch (ex) {}
   }
